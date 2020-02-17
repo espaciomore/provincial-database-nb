@@ -64,3 +64,6 @@ def export_data(studyID):
   exportData = get_export_data(studyID, domain=request.args.get('domain'))
 
   return render_template('json_viewer.html', data=exportData)
+
+if __name__ == '__main__':
+  app.run()
