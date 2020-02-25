@@ -22,7 +22,7 @@
           <ul>  
           {% for user in users %}
             <li>
-              <a href="/api/user/{{ user['id'] }}" title="{{ user['institute'] }} / {{ user['department'] }}">{{ user['full_name'] }}</a>
+              <a href="/api/user/{{ user['user_id'] }}?domain=us" title="{{ user['institute'] }} / {{ user['department'] }}">{{ user['full_name'] }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -37,6 +37,8 @@
               <a href="/api/study/{{ study['study_id'] }}/export/data?domain={{ 'us' if 'data' in study['domain'] else 'uk' }}">export</a>
               &nbsp;|&nbsp;
               <a href="/study/{{ study['study_id'] }}/records?domain={{ 'us' if 'data' in study['domain'] else 'uk' }}">records</a>
+              &nbsp;|&nbsp;
+              <a href="/#">add record</a>
             </li>
           {% endfor %}
         </ul>

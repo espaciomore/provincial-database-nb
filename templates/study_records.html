@@ -22,10 +22,24 @@
           {% endfor %}
         </tr>
         {% for i in range(0, size) %}
-          <tr>
-              {% for attribute_name in keys %}
-                <td title="{{ records[i][attribute_name]['timezone'] if attribute_name in 'created_on' or attribute_name in 'updated_on' else '' }}">{{ records[i][attribute_name]['date'] if attribute_name in 'created_on' or attribute_name in 'updated_on' else records[i][attribute_name] }}</td>
-              {% endfor %}  
+          <tr id="{{ records[i]['record_id'] }}" >
+            {% for attribute_name in keys %}
+              {% if attribute_name in 'created_by' %}
+                <td><a href="/api/study/{{ studyID }}/user/{{ records[i]['created_by'] }}?domain={{ domain }}">view</a></td>
+              {% elif attribute_name in 'updated_by' %}
+                <td><a href="/api/study/{{ studyID }}/user/{{ records[i]['updated_by'] }}?domain={{ domain }}">view</a></td>  
+              {% elif attribute_name in 'last_opened_step' %}
+                <td><a href="/api/study/{{ studyID }}/step/{{ records[i]['last_opened_step'] }}?domain={{ domain }}">view</a></td>   
+              {% else %}
+                <td timezone="{{ records[i][attribute_name]['timezone'] if attribute_name in 'created_on' or attribute_name in 'updated_on' else '' }}">
+                  {% if attribute_name in 'created_on' or attribute_name in 'updated_on' %}
+                    {{ records[i][attribute_name]['date'] | date }}
+                  {% else %}
+                    {{ records[i][attribute_name] }}
+                  {% endif %}
+                </td>
+              {% endif %}
+            {% endfor %}  
           </tr>
         {% endfor %}  
       </table>

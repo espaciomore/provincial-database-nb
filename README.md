@@ -7,3 +7,6 @@ Provincial Database of New Brunswick
 * Flask
 * Json
 * Oauth
+* Datetime
+
+*Note:* using `pip install [package-name]`
