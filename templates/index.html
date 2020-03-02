@@ -31,14 +31,15 @@
           <div>Studies<div>
           <ul>  
           {% for study in studies %}
+            {% set domain = 'us' if 'data' in study['domain'] else 'uk' %}
             <li>
-              <a href="/api/study/{{ study['crf_id'] }}?domain={{ 'us' if 'data' in study['domain'] else 'uk' }}" title="Version {{ study['version'] }}">{{ study['name'] }}</a>
+              <a href="/api/study/{{ study['crf_id'] }}?domain={{ domain }}" title="Version {{ study['version'] }}">{{ study['name'] }}</a>
               <br/>
-              <a href="/api/study/{{ study['study_id'] }}/export/data?domain={{ 'us' if 'data' in study['domain'] else 'uk' }}">export</a>
+              <!-- <a href="/api/study/{{ study['study_id'] }}/export/data?domain={{ domain }}">export</a>
+              &nbsp;|&nbsp; -->
+              <a href="/study/{{ study['study_id'] }}/records?domain={{ domain }}">records</a>
               &nbsp;|&nbsp;
-              <a href="/study/{{ study['study_id'] }}/records?domain={{ 'us' if 'data' in study['domain'] else 'uk' }}">records</a>
-              &nbsp;|&nbsp;
-              <a href="/#">add record</a>
+              <a href="/study/{{ study['study_id'] }}/institutes?domain={{ domain }}">institutes</a>
             </li>
           {% endfor %}
         </ul>

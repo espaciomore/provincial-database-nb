@@ -1,48 +1,25 @@
-<html>
-  <head>
-    <title>The New Brunswick Provincial Database</title>
-    <style type="text/css">
-        #center-container {
-          max-width: 1920px;
-          max-height: 1080;
-          margin: 0 auto;
-        }
-        li {
-          margin-top: 2px;
-          margin-bottom: 2px;
-        }
-      </style>
-  </head>
-  <body>
-    <div id="center-container">
-      <table>
-        <tr>
-          {% for attribute_name in keys  %}
-            <th>{{ attribute_name | capitalize }}</th>
-          {% endfor %}
-        </tr>
-        {% for i in range(0, size) %}
-          <tr id="{{ records[i]['record_id'] }}" >
-            {% for attribute_name in keys %}
-              {% if attribute_name in 'created_by' %}
-                <td><a href="/api/study/{{ studyID }}/user/{{ records[i]['created_by'] }}?domain={{ domain }}">view</a></td>
-              {% elif attribute_name in 'updated_by' %}
-                <td><a href="/api/study/{{ studyID }}/user/{{ records[i]['updated_by'] }}?domain={{ domain }}">view</a></td>  
-              {% elif attribute_name in 'last_opened_step' %}
-                <td><a href="/api/study/{{ studyID }}/step/{{ records[i]['last_opened_step'] }}?domain={{ domain }}">view</a></td>   
-              {% else %}
-                <td timezone="{{ records[i][attribute_name]['timezone'] if attribute_name in 'created_on' or attribute_name in 'updated_on' else '' }}">
-                  {% if attribute_name in 'created_on' or attribute_name in 'updated_on' %}
-                    {{ records[i][attribute_name]['date'] | date }}
-                  {% else %}
-                    {{ records[i][attribute_name] }}
-                  {% endif %}
-                </td>
-              {% endif %}
-            {% endfor %}  
-          </tr>
-        {% endfor %}  
-      </table>
-    </div>  
-  </body>
-</html> 
+{% extends 'list_items.html' %}
+{% block items %}
+  {% for i in range(0, size) %}
+    {% set records = data %}
+    <tr id="{{ records[i]['record_id'] }}" >
+      {% for attribute_name in keys %}
+        {% if attribute_name in 'created_by' %}
+          <td><a href="/api/study/{{ studyID }}/user/{{ records[i]['created_by'] }}?domain={{ domain }}">view</a></td>
+        {% elif attribute_name in 'updated_by' %}
+          <td><a href="/api/study/{{ studyID }}/user/{{ records[i]['updated_by'] }}?domain={{ domain }}">view</a></td>  
+        {% elif attribute_name in 'last_opened_step' %}
+          <td><a href="/api/study/{{ studyID }}/step/{{ records[i]['last_opened_step'] }}?domain={{ domain }}">view</a></td>   
+        {% else %}
+          <td timezone="{{ records[i][attribute_name]['timezone'] if attribute_name in 'created_on' or attribute_name in 'updated_on' else '' }}">
+            {% if attribute_name in 'created_on' or attribute_name in 'updated_on' %}
+              {{ records[i][attribute_name]['date'] | date }}
+            {% else %}
+              {{ records[i][attribute_name] }}
+            {% endif %}
+          </td>
+        {% endif %}
+      {% endfor %}  
+    </tr>
+  {% endfor %}
+{% endblock %}  

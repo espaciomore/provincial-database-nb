@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>The New Brunswick Provincial Database</title>
+    <style type="text/css">
+        #center-container {
+          max-width: 1920px;
+          max-height: 1080;
+          margin: 0 auto;
+        }
+        li {
+          margin-top: 2px;
+          margin-bottom: 2px;
+        }
+      </style>
+  </head>
+  <body>
+    <div id="center-container">
+      <table>
+        <tr>
+          {% for attribute_name in keys  %}
+            <th>{{ attribute_name | capitalize }}</th>
+          {% endfor %}
+        </tr>
+        {% block items %}
+          <!-- includes a sub-template -->
+        {% endblock %}
+      </table>
+    </div>  
+  </body>
+</html> 

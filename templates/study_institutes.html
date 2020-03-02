@@ -1,0 +1,11 @@
+{% extends 'list_items.html' %}
+{% block items %}
+  {% for i in range(0, size) %}
+    {% set institutes = data %}
+    <tr id="{{ institutes[i]['institute_id'] }}" >
+      {% for attribute_name in keys %}
+        <td>{{ institutes[i][attribute_name] }}</td>
+      {% endfor %}  
+    </tr>
+  {% endfor %}
+{% endblock %}  

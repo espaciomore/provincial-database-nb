@@ -1,7 +1,7 @@
 import requests
 import oauth
 
-def get_export_data(studyID, domain='us'):
+def export_study_data(studyID, domain='us'):
   ACCESS_TOKEN = oauth.get_token(domain)['access_token']
   BASE_URL = 'https://' + ('data' if domain == 'us' else domain) + '.castoredc.com'
   PATH = '/api/study/' + studyID + '/export/data'

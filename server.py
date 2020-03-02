@@ -4,8 +4,9 @@ sys.path.insert(1, './castor/api')
 
 from user import get_users, get_user
 from study import get_studies, get_study, get_study_user
-from export_data import get_export_data
-from record import get_records, get_record
+from export_data import export_study_data
+from institute import get_study_institutes, get_study_institute
+from record import get_study_records, get_study_record
 from step import get_study_step
 from flask import Flask, render_template, request
 from json import dumps, loads
@@ -42,11 +43,25 @@ def index():
 
   return render_template('index.html', users=usersData['_embedded']['user'], studies=studiesData['_embedded']['study'])
 
+@app.route('/study/<string:studyID>/institutes')
+def study_institutes(studyID):
+  domain=request.args.get('domain')
+
+  institutesData = get_study_institutes(studyID, domain)
+
+  institutes = institutesData['_embedded']['institutes']
+  attributes = institutes[0].keys()
+  attributes.remove('_links')
+  attributes.remove('id')
+  attributes.remove('institute_id')
+
+  return render_template('study_institutes.html', studyID=studyID, data=institutes, keys=sorted(attributes), size=len(institutes), domain=domain)
+
 @app.route('/study/<string:studyID>/records')
 def study_records(studyID):
   domain=request.args.get('domain')
 
-  recordsData = get_records(studyID, domain)
+  recordsData = get_study_records(studyID, domain)
   
   records = recordsData['_embedded']['records']
   attributes = records[0].keys()
@@ -55,7 +70,7 @@ def study_records(studyID):
   attributes.remove('id')
   attributes.remove('record_id')
   
-  return render_template('study_records.html', studyID=studyID, records=records, keys=sorted(attributes), size=len(records), domain=domain)
+  return render_template('study_records.html', studyID=studyID, data=records, keys=sorted(attributes), size=len(records), domain=domain)
 
 @app.route('/api/user/<string:userID>')
 def user(userID):
@@ -83,13 +98,13 @@ def study_step(studyID, stepID):
 
 @app.route('/api/study/<string:studyID>/record/<string:recordID>')
 def record(studyID, recordID):
-  recordData = get_record(recordID, studyID, domain=request.args.get('domain'))
+  recordData = get_study_record(recordID, studyID, domain=request.args.get('domain'))
 
   return render_template('json_viewer.html', data=recordData)
 
 @app.route('/api/study/<string:studyID>/export/data')
 def export_data(studyID):
-  exportData = get_export_data(studyID, domain=request.args.get('domain'))
+  exportData = export_study_data(studyID, domain=request.args.get('domain'))
 
   return render_template('json_viewer.html', data=exportData)
 
