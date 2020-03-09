@@ -102,6 +102,12 @@ def record(studyID, recordID):
 
   return render_template('json_viewer.html', data=recordData)
 
+@app.route('/api/study/<string:studyID>/institute/<string:instituteID>')
+def institute(studyID, instituteID):
+  instituteData = get_study_institute(instituteID, studyID, domain=request.args.get('domain'))
+
+  return render_template('json_viewer.html', data=instituteData)  
+
 @app.route('/api/study/<string:studyID>/export/data')
 def export_data(studyID):
   exportData = export_study_data(studyID, domain=request.args.get('domain'))
