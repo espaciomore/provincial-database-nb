@@ -3,8 +3,8 @@
     <title>The New Brunswick Provincial Database</title>
     <style type="text/css">
       #center-container {
-        max-width: 300px;
-        max-height: 500px;
+        max-width: 1080px;
+        max-height: 1600px;
           margin: 0 auto;
       }
       li {
@@ -15,35 +15,32 @@
   </head>
   <body>
     <div id="center-container">
-    <h3>Available Services</h3>
+    <h3>Available Studies</h3>
     <ul>
-        <li>
-          <div>Users<div>
-          <ul>  
-          {% for user in users %}
-            <li>
-              <a href="/api/user/{{ user['user_id'] }}?domain=us" title="{{ user['institute'] }} / {{ user['department'] }}">{{ user['full_name'] }}</a>
-            </li>
+      {% for study in data %} 
+      <li>
+        {% set domain = 'us' if 'data' in study['domain'] else 'uk' %}
+        <div>
+          <a href="/api/study/{{ study['crf_id'] }}?domain={{ domain }}" title="Version {{ study['version'] }}">{{ study['name'] }}</a>
+          <!-- <a href="/api/study/{{ study['study_id'] }}/export/data?domain={{ domain }}">export</a>
+          &nbsp;|&nbsp; -->
+        </div>
+        <ul>  
+          {% for record in study['records'] %}
+          {% set institute = record['_embedded']['institute'] %}
+          {% if 'ARCHIVED' not in record['record_id'] %}
+          <li>
+            <a href="api/study/{{ study['study_id'] }}/record/{{ record['record_id'] }}?domain={{ domain }}">{{ record['record_id'] }}</a>
+            &nbsp;|&nbsp;
+            <a href="api/study/{{ study['study_id'] }}/institute/{{ institute['institute_id'] }}?domain={{ domain }}">{{ institute['name'] }}</a>
+            &nbsp;|&nbsp;
+            <span>Data</span>
+          </li>
+          {% endif %}
           {% endfor %}
         </ul>
-        </li>
-        <li>
-          <div>Studies<div>
-          <ul>  
-          {% for study in studies %}
-            {% set domain = 'us' if 'data' in study['domain'] else 'uk' %}
-            <li>
-              <a href="/api/study/{{ study['crf_id'] }}?domain={{ domain }}" title="Version {{ study['version'] }}">{{ study['name'] }}</a>
-              <br/>
-              <!-- <a href="/api/study/{{ study['study_id'] }}/export/data?domain={{ domain }}">export</a>
-              &nbsp;|&nbsp; -->
-              <a href="/study/{{ study['study_id'] }}/records?domain={{ domain }}">records</a>
-              &nbsp;|&nbsp;
-              <a href="/study/{{ study['study_id'] }}/institutes?domain={{ domain }}">institutes</a>
-            </li>
-          {% endfor %}
-        </ul>
-        </li>
+      </li>
+      {% endfor %}
     </ul> 
     </div>  
   </body>

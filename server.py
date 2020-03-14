@@ -38,10 +38,16 @@ def date(datetimeString):
 @app.route('/')
 @app.route('/index')
 def index():
-  usersData = get_users()
   studiesData = get_studies()
+  studies = studiesData['_embedded']['study']
+  for studyData in studies:
+    domain = 'us' if 'data' in studyData['domain'] else 'uk'
+    studyRecordsData = get_study_records(studyData['study_id'], domain=domain)['_embedded']['records']
+    studyData.update({
+      "records": studyRecordsData
+    })  
 
-  return render_template('index.html', users=usersData['_embedded']['user'], studies=studiesData['_embedded']['study'])
+  return render_template('index.html', data=studies)
 
 @app.route('/study/<string:studyID>/institutes')
 def study_institutes(studyID):
