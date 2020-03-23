@@ -22,8 +22,10 @@
         {% set domain = 'us' if 'data' in study['domain'] else 'uk' %}
         <div>
           <a href="/api/study/{{ study['crf_id'] }}?domain={{ domain }}" title="Version {{ study['version'] }}">{{ study['name'] }}</a>
-          <!-- <a href="/api/study/{{ study['study_id'] }}/export/data?domain={{ domain }}">export</a>
-          &nbsp;|&nbsp; -->
+          &nbsp;|&nbsp; 
+          <a href="api/study/{{ study['study_id'] }}/data-point-collection/study+report?domain={{ domain }}">Data</a>
+          &nbsp;|&nbsp;
+          <a href="api/study/{{ study['study_id'] }}/field?domain={{ domain }}">Fields</a>
         </div>
         <ul>  
           {% for record in study['records'] %}
@@ -34,7 +36,7 @@
             &nbsp;|&nbsp;
             <a href="api/study/{{ study['study_id'] }}/institute/{{ institute['institute_id'] }}?domain={{ domain }}">{{ institute['name'] }}</a>
             &nbsp;|&nbsp;
-            <span>Data</span>
+            <a href="api/study/{{ study['study_id'] }}/record/{{ record['record_id'] }}/data-point/study?domain={{ domain }}">Data</a>
           </li>
           {% endif %}
           {% endfor %}

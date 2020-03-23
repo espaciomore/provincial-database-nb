@@ -3,11 +3,12 @@ import sys
 sys.path.insert(1, './castor/api')
 
 from user import get_users, get_user
-from study import get_studies, get_study, get_study_user
+from study import get_studies, get_study, get_study_user, get_study_fields, get_study_data_point_collection
 from export_data import export_study_data
 from institute import get_study_institutes, get_study_institute
-from record import get_study_records, get_study_record
+from record import get_study_records, get_study_record, get_study_record_data_point
 from step import get_study_step
+from report import get_report_data_point_collection
 from flask import Flask, render_template, request
 from json import dumps, loads
 from datetime import datetime as dt
@@ -119,6 +120,27 @@ def export_data(studyID):
   exportData = export_study_data(studyID, domain=request.args.get('domain'))
 
   return render_template('json_viewer.html', data=exportData)
+
+@app.route('/api/study/<string:studyID>/field')
+def field(studyID):
+  fieldData = get_study_fields(studyID, domain=request.args.get('domain'))
+
+  return render_template('json_viewer.html', data=fieldData)  
+
+@app.route('/api/study/<string:studyID>/data-point-collection/study+report')
+def data_point_collection(studyID):
+  studyDataPointCollection = get_study_data_point_collection(studyID, domain=request.args.get('domain'))
+  reportDataPointCollection = get_report_data_point_collection(studyID, domain=request.args.get('domain'))
+
+  studyAndReportData = { 'study': studyDataPointCollection, 'report': reportDataPointCollection }
+
+  return render_template('json_viewer.html', data=studyAndReportData)
+
+@app.route('/api/study/<string:studyID>/record/<string:recordID>/data-point/study')
+def study_data_point(studyID, recordID):
+  studyDataPoint = get_study_record_data_point(recordID, studyID, domain=request.args.get('domain'))
+
+  return render_template('json_viewer.html', data=studyDataPoint)
 
 if __name__ == '__main__':
   app.run()
